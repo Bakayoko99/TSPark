@@ -1,0 +1,1 @@
+{"version":3,"file":"health-check.controller.d.ts","sourceRoot":"","sources":["../../controllers/health-check.controller.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,MAAM,EAAqB,MAAM,SAAS,CAAC;AAEpD,qBAAa,qBAAqB;IACvB,MAAM,EAAE,MAAM,CAAC;;IAOtB,OAAO,CAAC,gBAAgB;IAIxB,OAAO,CAAC,WAAW,CAEjB;CACL"}
