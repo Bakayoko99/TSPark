@@ -1,10 +1,30 @@
 services:
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres:16-alpine
+    container_name: tspark-postgres
     restart: always
     ports:
-      - "27017:27017"
+      - "${POSTGRES_PORT:-5442}:5432"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: TSParkPsw
-      MONGO_INITDB_DATABASE: TSParkDB
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - tspark-network
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  tspark-network:
+    driver: bridge
