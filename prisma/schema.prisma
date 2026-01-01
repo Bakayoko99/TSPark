@@ -27,6 +27,12 @@ enum SalleStatus {
   INACTIVE
 }
 
+enum DifficultyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
 model User {
   id                  Int      @id @default(autoincrement())
   email               String   @unique
@@ -68,6 +74,8 @@ model Salle {
   owner          User         @relation("SalleOwner", fields: [owner_id], references: [id], onDelete: Cascade)
   approver       User?        @relation("SalleApprover", fields: [approved_by], references: [id], onDelete: SetNull)
   gym_equipments GymEquipment[]
+  gym_exercice_types  GymExerciceType[]
+
 
   @@map("salles")
 }
@@ -97,5 +105,34 @@ model GymEquipment {
 
   @@unique([gym_id, equipment_id])
   @@map("gym_equipments")
+}
+
+model ExerciceType {
+  id               Int             @id @default(autoincrement())
+  name             String          @unique
+  description      String          @db.Text
+  difficulty_level DifficultyLevel
+  targeted_muscles String          @db.Text
+  calories_per_hour Int
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
+
+  // Relations
+  gym_exercice_types  GymExerciceType[]
+
+  @@map("exercice_types")
+}
+
+model GymExerciceType {
+  id                Int           @id @default(autoincrement())
+  gym_id            Int
+  exercice_type_id  Int
+
+  // Relations
+  gym               Salle         @relation(fields: [gym_id], references: [id], onDelete: Cascade)
+  exercice_type     ExerciceType  @relation(fields: [exercice_type_id], references: [id], onDelete: Cascade)
+
+  @@unique([gym_id, exercice_type_id])
+  @@map("gym_exercice_types")
 }
 
