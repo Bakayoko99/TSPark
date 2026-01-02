@@ -32,6 +32,19 @@ enum DifficultyLevel {
   INTERMEDIATE
   ADVANCED
 }
+enum DefiStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+enum UserDefiStatus {
+  INVITED
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
 
 model User {
   id                  Int      @id @default(autoincrement())
@@ -49,6 +62,11 @@ model User {
   // Relations
   owned_salles        Salle[]  @relation("SalleOwner")
   approved_salles     Salle[]  @relation("SalleApprover")
+  created_defis       Defi[]               @relation("DefiCreator")
+  defi_participations UserDefi[]
+  workout_sessions    WorkoutSession[]
+
+
 
   @@map("users")
 }
@@ -75,6 +93,9 @@ model Salle {
   approver       User?        @relation("SalleApprover", fields: [approved_by], references: [id], onDelete: SetNull)
   gym_equipments GymEquipment[]
   gym_exercice_types  GymExerciceType[]
+  defis               Defi[]
+  workout_sessions    WorkoutSession[]
+
 
 
   @@map("salles")
@@ -119,6 +140,10 @@ model ExerciceType {
 
   // Relations
   gym_exercice_types  GymExerciceType[]
+  defi_exercises      DefiExercice[]
+  workout_exercises   WorkoutExercice[]
+
+
 
   @@map("exercice_types")
 }
@@ -136,3 +161,102 @@ model GymExerciceType {
   @@map("gym_exercice_types")
 }
 
+model Defi {
+  id                Int             @id @default(autoincrement())
+  creator_id        Int
+  gym_id            Int?
+  title             String
+  description       String          @db.Text
+  difficulty_level  DifficultyLevel
+  duration_days     Int
+  start_date        DateTime?
+  end_date          DateTime?
+  is_collaborative  Boolean         @default(false)
+  target_calories   Int?
+  status            DefiStatus      @default(DRAFT)
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
+
+  // Relations
+  creator           User            @relation("DefiCreator", fields: [creator_id], references: [id], onDelete: Cascade)
+  gym               Salle?          @relation(fields: [gym_id], references: [id], onDelete: SetNull)
+  exercises         DefiExercice[]
+  participants      UserDefi[]
+  workout_sessions  WorkoutSession[]
+
+
+
+  @@map("defis")
+}
+
+model DefiExercice {
+  id                      Int           @id @default(autoincrement())
+  challenge_id            Int
+  exercise_type_id        Int
+  target_repetitions      Int?
+  target_duration_minutes Int?
+  order_index             Int
+
+  // Relations
+  challenge               Defi          @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+  exercise_type           ExerciceType  @relation(fields: [exercise_type_id], references: [id], onDelete: Cascade)
+
+  @@unique([challenge_id, exercise_type_id])
+  @@map("defi_exercices")
+}
+model UserDefi {
+  id                   Int             @id @default(autoincrement())
+  user_id              Int
+  challenge_id         Int
+  status               UserDefiStatus  @default(INVITED)
+  progress_percentage  Decimal         @default(0) @db.Decimal(5, 2)
+  joined_at            DateTime        @default(now())
+  completed_at         DateTime?
+
+  // Relations
+  user                 User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  challenge            Defi            @relation(fields: [challenge_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, challenge_id])
+  @@map("user_defis")
+}
+model WorkoutSession {
+  id               Int       @id @default(autoincrement())
+  user_id          Int
+  challenge_id     Int?
+  gym_id           Int?
+  session_date     DateTime
+  duration_minutes Int
+  calories_burned  Int
+  notes            String?   @db.Text
+  created_at       DateTime  @default(now())
+
+  // Relations
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  challenge        Defi?     @relation(fields: [challenge_id], references: [id], onDelete: SetNull)
+  gym              Salle?    @relation(fields: [gym_id], references: [id], onDelete: SetNull)
+  exercises        WorkoutExercice[]
+
+
+  @@index([user_id])
+  @@index([challenge_id])
+  @@index([gym_id])
+  @@index([session_date])
+  @@map("workout_sessions")
+}
+model WorkoutExercice {
+  id                  Int              @id @default(autoincrement())
+  workout_session_id  Int
+  exercise_type_id    Int
+  repetitions         Int?
+  duration_minutes    Int?
+  weight_kg           Decimal?         @db.Decimal(5, 2)
+
+  // Relations
+  workout_session     WorkoutSession   @relation(fields: [workout_session_id], references: [id], onDelete: Cascade)
+  exercise_type       ExerciceType     @relation(fields: [exercise_type_id], references: [id], onDelete: Cascade)
+
+  @@index([workout_session_id])
+  @@index([exercise_type_id])
+  @@map("workout_exercices")
+}

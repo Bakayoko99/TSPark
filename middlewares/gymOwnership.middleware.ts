@@ -120,3 +120,54 @@ export const verifyGymExerciceTypeOwnership = async (req: Request, res: Response
     });
   }
 };
+
+export const verifyDefiOwnership = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required',
+      });
+    }
+
+    if (req.user.role === Role.ADMIN) {
+      return next();
+    }
+
+    const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid challenge ID',
+      });
+    }
+
+    const defi = await prisma.defi.findUnique({
+      where: { id },
+      select: { creator_id: true, title: true },
+    });
+
+    if (!defi) {
+      return res.status(404).json({
+        success: false,
+        message: 'Challenge not found',
+      });
+    }
+
+    if (defi.creator_id !== req.user.userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You can only manage your own challenges.',
+      });
+    }
+
+    next();
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: 'Error verifying challenge ownership',
+      error: error.message,
+    });
+  }
+};
