@@ -14,15 +14,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongoose": "^8.19.3"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
     "@types/nodemon": "^1.19.6",
     "nodemon": "^3.1.11",
+    "prisma": "^5.13.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }

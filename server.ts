@@ -1,45 +1,16 @@
-import express, { Express } from "express";
-import { config } from "dotenv";
-import { openMongooseConnection } from "./services/DB-connect";
-import { HealthCheckController } from "./controllers/health-check.controller";
-import { SuperAdminController } from "./controllers/superAdmin.controller";
+import express from 'express';
+import dotenv from 'dotenv';
+import userRoutes from './routes/user.routes';
 
+dotenv.config();
 
-config();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const Main = async () => {
-    const app: Express = express();
+app.use(express.json());
 
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+app.use('/api/users', userRoutes);
 
-    try {
-        console.log('🔄 Connexion à MongoDB...');
-        const mongooseConnection = await openMongooseConnection();
-        console.log('✅ Connexion MongoDB établie avec succès');
-
-        mongooseConnection.connection.on('error', (error) => {
-            console.error('❌ Erreur MongoDB:', error);
-        });
-
-        mongooseConnection.connection.on('disconnected', () => {
-            console.log('⚠️  MongoDB déconnecté');
-        });
-
-        const healthCheckController = new HealthCheckController();
-        const superAdminController = new SuperAdminController();
-
-        app.use('/health', healthCheckController.router);
-        app.use('/superadmins', superAdminController.router);
-
-        app.listen(process.env.PORT, () => {
-            console.log(`🚀 Serveur démarré sur le port ${process.env.PORT}`);
-        });
-
-    } catch (error) {
-        console.error('💥 Erreur lors du démarrage:', error);
-        process.exit(1);
-    }
-};
-
-Main().catch(console.error);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
