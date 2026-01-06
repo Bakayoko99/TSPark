@@ -46,6 +46,13 @@ enum UserDefiStatus {
   ABANDONED
 }
 
+enum BadgeType {
+  CHALLENGE_COMPLETION
+  STREAK
+  MILESTONE
+  SPECIAL
+}
+
 model User {
   id                  Int      @id @default(autoincrement())
   email               String   @unique
@@ -65,6 +72,8 @@ model User {
   created_defis       Defi[]               @relation("DefiCreator")
   defi_participations UserDefi[]
   workout_sessions    WorkoutSession[]
+  created_badges      Badge[]             @relation("BadgeCreator")
+
 
 
 
@@ -259,4 +268,21 @@ model WorkoutExercice {
   @@index([workout_session_id])
   @@index([exercise_type_id])
   @@map("workout_exercices")
+}
+model Badge {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String    @db.Text
+  image_url   String
+  badge_type  BadgeType
+  created_by  Int
+  created_at  DateTime  @default(now())
+
+  // Relations
+  creator     User        @relation("BadgeCreator", fields: [created_by], references: [id], onDelete: Cascade)
+
+
+  @@index([badge_type])
+  @@index([created_by])
+  @@map("badges")
 }
