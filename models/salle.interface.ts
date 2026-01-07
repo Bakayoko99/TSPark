@@ -1,116 +1,55 @@
+export enum SalleStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive'
+}
+
 export interface Salle {
-  id: string;
-  nom: string;
-  adresse: string;
-  ville: string;
-  codePostal: string;
-  coordonnees: Coordonnees;
-  proprietaireId: string;
-  capaciteAccueil: number;
-  equipements: Equipement[];
+  id: number;
+  owner_id: number;
+  name: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  contact_phone: string;
+  contact_email: string;
   description: string;
-  typesActivites: string[];
-  heuresOuverture: HeuresOuverture;
-  statut: StatutSalle;
-  dateCreation: Date;
-  dateApprobation?: Date;
-  approuvePar?: string; // SuperAdmin ID
-  photos: string[]; // URLs des photos
-  tarifs?: Tarif[];
-  notesMoyenne: number;
-  nombreAvis: number;
+  capacity: number;
+  status: SalleStatus;
+  created_at: Date;
+  updated_at: Date;
+  approved_by: number | null;
+  approved_at: Date | null;
 }
 
-export interface Coordonnees {
-  latitude: number;
-  longitude: number;
-}
-
-export interface Equipement {
-  id: string;
-  nom: string;
-  quantite: number;
-  etat: EtatEquipement;
-  description?: string;
-}
-
-export interface HeuresOuverture {
-  lundi: CreneauHoraire[];
-  mardi: CreneauHoraire[];
-  mercredi: CreneauHoraire[];
-  jeudi: CreneauHoraire[];
-  vendredi: CreneauHoraire[];
-  samedi: CreneauHoraire[];
-  dimanche: CreneauHoraire[];
-}
-
-export interface CreneauHoraire {
-  ouverture: string; // Format HH:mm
-  fermeture: string; // Format HH:mm
-}
-
-export interface Tarif {
-  type: TypeTarif;
-  prix: number;
-  duree: number; // en jours
-  description?: string;
-}
-
-export enum StatutSalle {
-  EN_ATTENTE = 'en_attente',
-  APPROUVE = 'approuve',
-  REFUSE = 'refuse',
-  SUSPENDU = 'suspendu',
-  FERME = 'ferme'
-}
-
-export enum EtatEquipement {
-  EXCELLENT = 'excellent',
-  BON = 'bon',
-  MOYEN = 'moyen',
-  MAUVAIS = 'mauvais',
-  HORS_SERVICE = 'hors_service'
-}
-
-export enum TypeTarif {
-  JOURNEE = 'journee',
-  SEMAINE = 'semaine',
-  MOIS = 'mois',
-  ANNEE = 'annee'
-}
-
-export interface CreateSalleDto {
-  nom: string;
-  adresse: string;
-  ville: string;
-  codePostal: string;
-  coordonnees: Coordonnees;
-  proprietaireId: string;
-  capaciteAccueil: number;
-  equipements: Omit<Equipement, 'id'>[];
+export interface CreateSalleInput {
+  owner_id: number;
+  name: string;
+  address: string;
+  city: string;
+  postal_code: string;
+  contact_phone: string;
+  contact_email: string;
   description: string;
-  typesActivites: string[];
-  heuresOuverture: HeuresOuverture;
-  photos?: string[];
-  tarifs?: Tarif[];
+  capacity: number;
+  status?: SalleStatus;
 }
 
-export interface UpdateSalleDto {
-  nom?: string;
-  adresse?: string;
-  ville?: string;
-  codePostal?: string;
-  coordonnees?: Coordonnees;
-  capaciteAccueil?: number;
-  equipements?: Equipement[];
+export interface UpdateSalleInput {
+  name?: string;
+  address?: string;
+  city?: string;
+  postal_code?: string;
+  contact_phone?: string;
+  contact_email?: string;
   description?: string;
-  typesActivites?: string[];
-  heuresOuverture?: HeuresOuverture;
-  photos?: string[];
-  tarifs?: Tarif[];
+  capacity?: number;
+  status?: SalleStatus;
 }
 
-export interface ApproveSalleDto {
-  statut: StatutSalle.APPROUVE | StatutSalle.REFUSE;
-  commentaire?: string;
+export interface ApproveSalleInput {
+  approved_by: number;
+  status: SalleStatus.APPROVED | SalleStatus.REJECTED;
 }
