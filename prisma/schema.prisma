@@ -19,18 +19,82 @@ enum Role {
   CLIENT
 }
 
+enum SalleStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  INACTIVE
+}
+
 model User {
   id                  Int      @id @default(autoincrement())
-  email                String   @unique
-  password_hash        String
-  first_name           String
-  last_name            String
-  role                 Role     @default(CLIENT)
-  profile_picture_url  String?
-  created_at           DateTime @default(now())
-  updated_at           DateTime @updatedAt
-  is_active            Boolean  @default(true)
-  player_score         Int      @default(0)
+  email               String   @unique
+  password_hash       String
+  first_name          String
+  last_name           String
+  role                Role     @default(CLIENT)
+  profile_picture_url String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  is_active           Boolean  @default(true)
+  player_score        Int      @default(0)
+
+  // Relations
+  owned_salles        Salle[]  @relation("SalleOwner")
+  approved_salles     Salle[]  @relation("SalleApprover")
 
   @@map("users")
+}
+
+model Salle {
+  id             Int          @id @default(autoincrement())
+  owner_id       Int
+  name           String
+  address        String
+  city           String
+  postal_code    String
+  contact_phone  String
+  contact_email  String
+  description    String       @db.Text
+  capacity       Int
+  status         SalleStatus  @default(PENDING)
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
+  approved_by    Int?
+  approved_at    DateTime?
+
+  // Relations
+  owner          User         @relation("SalleOwner", fields: [owner_id], references: [id], onDelete: Cascade)
+  approver       User?        @relation("SalleApprover", fields: [approved_by], references: [id], onDelete: SetNull)
+  gym_equipments GymEquipment[]
+
+  @@map("salles")
+}
+
+model Equipment {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.Text
+  image_url   String?
+  created_at  DateTime @default(now())
+
+  // Relations
+  gym_equipments GymEquipment[]
+
+  @@map("equipments")
+}
+
+model GymEquipment {
+  id           Int       @id @default(autoincrement())
+  gym_id       Int
+  equipment_id Int
+  quantity     Int       @default(1)
+
+  // Relations
+  gym          Salle     @relation(fields: [gym_id], references: [id], onDelete: Cascade)
+  equipment    Equipment @relation(fields: [equipment_id], references: [id], onDelete: Cascade)
+
+  @@unique([gym_id, equipment_id])
+  @@map("gym_equipments")
 }
