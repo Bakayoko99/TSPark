@@ -1,0 +1,1596 @@
+{
+	"info": {
+		"_postman_id": "2a1f1f2e-5ff3-4d6a-84c8-ec76da5ac0aa",
+		"name": "TSPark API - Admin Complete Collection",
+		"description": "Collection complète pour tester toutes les fonctionnalités administrateur de TSPark",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "17382063",
+		"_collection_link": "https://chabab-laaouina-1841.postman.co/workspace/chabab-laaouina-Workspace~e3747196-06a6-4d73-9ea1-ddac96940d4a/collection/17382063-2a1f1f2e-5ff3-4d6a-84c8-ec76da5ac0aa?source=collection_link"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('admin_token', jsonData.data.token);",
+									"    pm.collectionVariables.set('admin_id', jsonData.data.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@tspark.com\",\n  \"password\": \"Admin123!\",\n  \"first_name\": \"Admin\",\n  \"last_name\": \"TSPark\",\n  \"role\": \"ADMIN\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('admin_token', jsonData.data.token);",
+									"    pm.collectionVariables.set('admin_id', jsonData.data.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@tspark.com\",\n  \"password\": \"Admin123!\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/auth/profile"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. User Management",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/users/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"Updated\",\n  \"last_name\": \"User\",\n  \"role\": \"GYM_OWNER\"\n}"
+						},
+						"url": "{{base_url}}/api/users/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/users/{{user_id}}/deactivate"
+					},
+					"response": []
+				},
+				{
+					"name": "Activate User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/users/{{user_id}}/activate"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/users/{{user_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Gym Management",
+			"item": [
+				{
+					"name": "Get All Gyms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Gym By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Gym",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"FitZone Paris - Updated\",\n  \"capacity\": 200\n}"
+						},
+						"url": "{{base_url}}/api/salles/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Gym",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"approved_by\": {{admin_id}},\n  \"status\": \"APPROVED\"\n}"
+						},
+						"url": "{{base_url}}/api/salles/{{salle_id}}/approve"
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Gym",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"REJECTED\"\n}"
+						},
+						"url": "{{base_url}}/api/salles/{{salle_id}}/approve"
+					},
+					"response": []
+				},
+				{
+					"name": "Activate Gym",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/{{salle_id}}/activate"
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate Gym",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/{{salle_id}}/deactivate"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Gyms By Status - Pending",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/status/PENDING"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Gyms By Status - Approved",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/status/APPROVED"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Gym",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/{{salle_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Equipment Management",
+			"item": [
+				{
+					"name": "Create Equipment - Treadmill",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('equipment_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Treadmill\",\n  \"description\": \"Professional treadmill with speed and incline control\",\n  \"image_url\": \"https://example.com/treadmill.jpg\"\n}"
+						},
+						"url": "{{base_url}}/api/equipments"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Equipment - Dumbbells",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Dumbbells Set\",\n  \"description\": \"Complete set of dumbbells from 5kg to 50kg\",\n  \"image_url\": \"https://example.com/dumbbells.jpg\"\n}"
+						},
+						"url": "{{base_url}}/api/equipments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Equipment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/equipments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Equipment By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/equipments/{{equipment_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Equipment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Treadmill Pro\",\n  \"description\": \"Updated professional treadmill\"\n}"
+						},
+						"url": "{{base_url}}/api/equipments/{{equipment_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Equipment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/equipments/{{equipment_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Exercise Type Management",
+			"item": [
+				{
+					"name": "Get All Exercise Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercise Type By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/{{exercice_type_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create - Running",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('exercice_type_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Running\",\n  \"description\": \"Cardiovascular exercise involving running at various speeds and intensities.\",\n  \"difficulty_level\": \"BEGINNER\",\n  \"targeted_muscles\": \"Quadriceps, Hamstrings, Calves, Glutes, Core\",\n  \"calories_per_hour\": 600\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Create - Yoga",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Yoga\",\n  \"description\": \"Mind-body practice combining physical postures, breathing techniques, and meditation.\",\n  \"difficulty_level\": \"BEGINNER\",\n  \"targeted_muscles\": \"Full Body, Core, Back, Legs\",\n  \"calories_per_hour\": 200\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Create - Weight Training",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Weight Training\",\n  \"description\": \"Resistance training using weights to build muscle mass, strength, and endurance.\",\n  \"difficulty_level\": \"INTERMEDIATE\",\n  \"targeted_muscles\": \"Chest, Back, Shoulders, Arms, Legs, Core\",\n  \"calories_per_hour\": 400\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Create - CrossFit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"CrossFit\",\n  \"description\": \"High-intensity functional training combining weightlifting, cardio, and gymnastics.\",\n  \"difficulty_level\": \"ADVANCED\",\n  \"targeted_muscles\": \"Full Body, Core, Cardiovascular System\",\n  \"calories_per_hour\": 800\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Create - HIIT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"HIIT\",\n  \"description\": \"Short bursts of intense exercise alternated with recovery periods.\",\n  \"difficulty_level\": \"ADVANCED\",\n  \"targeted_muscles\": \"Full Body, Cardiovascular System\",\n  \"calories_per_hour\": 900\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exercise Type",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"difficulty_level\": \"INTERMEDIATE\",\n  \"calories_per_hour\": 650\n}"
+						},
+						"url": "{{base_url}}/api/exercice-types/{{exercice_type_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Difficulty - Beginner",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/difficulty/BEGINNER"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Exercise Type",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/{{exercice_type_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gym Equipment Management",
+			"item": []
+		},
+		{
+			"name": "GymExerciceType Management",
+			"item": []
+		},
+		{
+			"name": "6. Challenge Management",
+			"item": [
+				{
+					"name": "Get All Challenges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenges By Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/status/ACTIVE"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('defi_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"creator_id\": {{admin_id}},\n  \"gym_id\": {{salle_id}},\n  \"title\": \"30-Day Fitness Challenge\",\n  \"description\": \"Complete 30 days of varied workouts\",\n  \"difficulty_level\": \"INTERMEDIATE\",\n  \"duration_days\": 30,\n  \"is_collaborative\": false,\n  \"target_calories\": 15000,\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": "{{base_url}}/api/defis"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Challenge",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Challenge Title\",\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Challenge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Badge Management",
+			"item": [
+				{
+					"name": "Get All Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badge By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges/{{badge_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Badge - Challenge Completion",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('badge_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Challenge Master\",\n  \"description\": \"Complete 5 challenges\",\n  \"image_url\": \"https://example.com/badge1.png\",\n  \"badge_type\": \"CHALLENGE_COMPLETION\"\n}"
+						},
+						"url": "{{base_url}}/api/badges"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Badge - Streak",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"7-Day Streak\",\n  \"description\": \"Train 7 consecutive days\",\n  \"image_url\": \"https://example.com/badge2.png\",\n  \"badge_type\": \"STREAK\"\n}"
+						},
+						"url": "{{base_url}}/api/badges"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Badge - Milestone",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"100 Sessions\",\n  \"description\": \"Complete 100 workout sessions\",\n  \"image_url\": \"https://example.com/badge3.png\",\n  \"badge_type\": \"MILESTONE\"\n}"
+						},
+						"url": "{{base_url}}/api/badges"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Badge",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Badge Name\",\n  \"description\": \"Updated description\"\n}"
+						},
+						"url": "{{base_url}}/api/badges/{{badge_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badges By Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges/type/CHALLENGE_COMPLETION"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Badge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges/{{badge_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8. Badge Rule Management",
+			"item": [
+				{
+					"name": "Get All Badge Rules",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badge Rules By Badge ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badge-rules/badge/{{badge_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Challenge Completed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('rule_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"CHALLENGE_COMPLETED\",\n  \"rule_config\": {\n    \"challenge_id\": {{defi_id}}\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Challenges Count",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"CHALLENGES_COUNT\",\n  \"rule_config\": {\n    \"count\": 5,\n    \"difficulty_level\": \"INTERMEDIATE\"\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Consecutive Days",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"CONSECUTIVE_DAYS\",\n  \"rule_config\": {\n    \"days\": 7\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Total Sessions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"TOTAL_SESSIONS\",\n  \"rule_config\": {\n    \"sessions_count\": 100\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Total Calories",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"TOTAL_CALORIES\",\n  \"rule_config\": {\n    \"calories\": 10000\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Rule - Player Score",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badge_id\": {{badge_id}},\n  \"rule_type\": \"PLAYER_SCORE\",\n  \"rule_config\": {\n    \"score\": 1000\n  }\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Badge Rule",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rule_config\": {\n    \"count\": 10\n  },\n  \"is_active\": true\n}"
+						},
+						"url": "{{base_url}}/api/badge-rules/{{rule_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Rule Active Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badge-rules/{{rule_id}}/toggle"
+					},
+					"response": []
+				},
+				{
+					"name": "Check User Eligibility",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badge-rules/check-eligibility/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Badge Rule",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badge-rules/{{rule_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. User Badge Management",
+			"item": [
+				{
+					"name": "Award Badge Manually",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": {{user_id}},\n  \"badge_id\": {{badge_id}}\n}"
+						},
+						"url": "{{base_url}}/api/user-badges/award"
+					},
+					"response": []
+				},
+				{
+					"name": "Auto Award Badges",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/auto-award/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/user/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users By Badge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/badge/{{badge_id}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Badge Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/user/{{user_id}}/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Revoke Badge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": {{user_id}},\n  \"badge_id\": {{badge_id}}\n}"
+						},
+						"url": "{{base_url}}/api/user-badges/revoke"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user-badges/leaderboard?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-badges",
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "10. Workout Session Management",
+			"item": [
+				{
+					"name": "Get All Workout Sessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Workout Session By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/{{workout_session_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sessions By User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/user/{{user_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sessions By Gym",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/gym/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Sessions By Challenge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/challenge/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Workout Session",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/{{workout_session_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "11. Statistics & Reports",
+			"item": [
+				{
+					"name": "Exercise Type Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "User Badge Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/user/{{user_id}}/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Badge Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/leaderboard"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "gym_owner_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "client_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "admin_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "gym_owner_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "client_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "salle_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "equipment_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "exercice_type_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "defi_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "badge_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "rule_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "workout_session_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "gym_exercice_type_id",
+			"value": ""
+		}
+	]
+}

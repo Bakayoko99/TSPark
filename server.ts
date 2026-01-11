@@ -12,7 +12,9 @@ import defiExerciceRoutes from './routes/defiExercice.routes';
 import userDefiRoutes from './routes/userDefi.routes';
 import workoutSessionRoutes from './routes/workoutSession.routes';
 import workoutExerciceRoutes from './routes/workoutExercice.routes';
-import badgeRoutes from './routes/badge.routes'
+import badgeRoutes from './routes/badge.routes';
+import badgeRuleRoutes from './routes/badgeRule.routes';
+import userBadgeRoutes from './routes/userBadge.routes';
 
 dotenv.config();
 
@@ -35,6 +37,8 @@ app.use('/api/user-defis', userDefiRoutes);
 app.use('/api/workout-sessions', workoutSessionRoutes);
 app.use('/api/workout-exercices', workoutExerciceRoutes);
 app.use('/api/badges', badgeRoutes);
+app.use('/api/badge-rules', badgeRuleRoutes);
+app.use('/api/user-badges', userBadgeRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,0 +1,901 @@
+{
+	"info": {
+		"_postman_id": "aaa3ee0c-dedc-45e3-91f6-91217a42232c",
+		"name": "TSPark API - Gym Owner Collection",
+		"description": "Collection complète pour les propriétaires de salles de sport",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "17382063",
+		"_collection_link": "https://chabab-laaouina-1841.postman.co/workspace/chabab-laaouina-Workspace~e3747196-06a6-4d73-9ea1-ddac96940d4a/collection/17382063-aaa3ee0c-dedc-45e3-91f6-91217a42232c?source=collection_link"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Register Gym Owner",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('gym_owner_token', jsonData.data.token);",
+									"    pm.collectionVariables.set('gym_owner_id', jsonData.data.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@fitzone.com\",\n  \"password\": \"Owner123!\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Fitness\",\n  \"role\": \"GYM_OWNER\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login Gym Owner",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('gym_owner_token', jsonData.data.token);",
+									"    pm.collectionVariables.set('gym_owner_id', jsonData.data.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@fitzone.com\",\n  \"password\": \"Owner123!\"\n}"
+						},
+						"url": "{{base_url}}/api/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/auth/profile"
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Fitness Pro\",\n  \"profile_picture_url\": \"https://example.com/profile.jpg\"\n}"
+						},
+						"url": "{{base_url}}/api/users/{{gym_owner_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. My Gyms Management",
+			"item": [
+				{
+					"name": "Get All My Gyms",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/owner/{{gym_owner_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Gym By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/salles/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Gym",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('salle_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"owner_id\": {{gym_owner_id}},\n  \"name\": \"FitZone Paris\",\n  \"address\": \"123 Avenue des Champs-Élysées\",\n  \"city\": \"Paris\",\n  \"postal_code\": \"75008\",\n  \"contact_phone\": \"+33123456789\",\n  \"contact_email\": \"contact@fitzone.fr\",\n  \"description\": \"Modern fitness center with state-of-the-art equipment\",\n  \"capacity\": 150\n}"
+						},
+						"url": "{{base_url}}/api/salles"
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Gym",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"FitZone Paris Premium\",\n  \"description\": \"Updated description with new services\",\n  \"capacity\": 200\n}"
+						},
+						"url": "{{base_url}}/api/salles/{{salle_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Equipment Management",
+			"item": [
+				{
+					"name": "Get All Equipment (Catalog)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/equipments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Equipment By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/equipments/{{equipment_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Gym Equipment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/gym-equipments/gym/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Equipment To My Gym",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('gym_equipment_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"gym_id\": {{salle_id}},\n  \"equipment_id\": {{equipment_id}},\n  \"quantity\": 5\n}"
+						},
+						"url": "{{base_url}}/api/gym-equipments"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Equipment Quantity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 10\n}"
+						},
+						"url": "{{base_url}}/api/gym-equipments/{{gym_equipment_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Equipment From Gym",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/gym-equipments/{{gym_equipment_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4. Exercise Types Management",
+			"item": [
+				{
+					"name": "Get All Exercise Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exercise Type By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/{{exercice_type_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Difficulty Level",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/exercice-types/difficulty/BEGINNER"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Gym Exercise Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/gym-exercice-types/gym/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Exercise Type To My Gym",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('gym_exercice_type_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"gym_id\": {{salle_id}},\n  \"exercice_type_id\": {{exercice_type_id}}\n}"
+						},
+						"url": "{{base_url}}/api/gym-exercice-types"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Exercise Type From Gym",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/gym-exercice-types/{{gym_exercice_type_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "5. Challenge Management",
+			"item": [
+				{
+					"name": "Get All Challenges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Gym Challenges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/gym/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Created Challenges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/creator/{{gym_owner_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('defi_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"creator_id\": {{gym_owner_id}},\n  \"gym_id\": {{salle_id}},\n  \"title\": \"Summer Body Challenge\",\n  \"description\": \"Get fit for summer in 30 days\",\n  \"difficulty_level\": \"INTERMEDIATE\",\n  \"duration_days\": 30,\n  \"is_collaborative\": false,\n  \"target_calories\": 15000,\n  \"status\": \"DRAFT\"\n}"
+						},
+						"url": "{{base_url}}/api/defis"
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Challenge",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Challenge Title\",\n  \"status\": \"ACTIVE\",\n  \"start_date\": \"2026-02-01T00:00:00Z\",\n  \"end_date\": \"2026-03-02T23:59:59Z\"\n}"
+						},
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete My Challenge",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defis/{{defi_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6. Challenge Exercises Management",
+			"item": [
+				{
+					"name": "Get Challenge Exercises",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defi-exercices/challenge/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge Exercise Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defi-exercices/challenge/{{defi_id}}/stats"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Total Calories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defi-exercices/challenge/{{defi_id}}/calories"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Exercise To Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('defi_exercice_id', jsonData.data.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"challenge_id\": {{defi_id}},\n  \"exercise_type_id\": {{exercice_type_id}},\n  \"target_repetitions\": 50,\n  \"target_duration_minutes\": 30,\n  \"order_index\": 1\n}"
+						},
+						"url": "{{base_url}}/api/defi-exercices"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Multiple Exercises",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"challenge_id\": {{defi_id}},\n  \"exercises\": [\n    {\n      \"exercise_type_id\": 1,\n      \"target_repetitions\": 50,\n      \"target_duration_minutes\": 30,\n      \"order_index\": 1\n    },\n    {\n      \"exercise_type_id\": 2,\n      \"target_repetitions\": 100,\n      \"order_index\": 2\n    }\n  ]\n}"
+						},
+						"url": "{{base_url}}/api/defi-exercices/bulk"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Exercise",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"target_repetitions\": 75,\n  \"target_duration_minutes\": 45\n}"
+						},
+						"url": "{{base_url}}/api/defi-exercices/{{defi_exercice_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Reorder Exercises",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newOrder\": [\n    {\n      \"id\": 1,\n      \"order_index\": 2\n    },\n    {\n      \"id\": 2,\n      \"order_index\": 1\n    }\n  ]\n}"
+						},
+						"url": "{{base_url}}/api/defi-exercices/challenge/{{defi_id}}/reorder"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Exercise",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/defi-exercices/{{defi_exercice_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "7. Challenge Participants",
+			"item": [
+				{
+					"name": "Get Challenge Participants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-defis/challenge/{{defi_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-defis/challenge/{{defi_id}}/leaderboard"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "8. Workout Sessions (View Only)",
+			"item": [
+				{
+					"name": "Get My Gym Sessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/gym/{{salle_id}}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Challenge Sessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/workout-sessions/challenge/{{defi_id}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "9. Badges (View Only)",
+			"item": [
+				{
+					"name": "Get All Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Badge By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/badges/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{gym_owner_token}}"
+							}
+						],
+						"url": "{{base_url}}/api/user-badges/leaderboard"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "gym_owner_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "gym_owner_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "salle_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "equipment_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "exercice_type_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "defi_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "gym_equipment_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "gym_exercice_type_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "defi_exercice_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

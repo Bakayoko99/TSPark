@@ -4,13 +4,16 @@ import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Routes publiques
-router.get('/challenge/:challenge_id', defiExerciceController.getExercicesByDefiId);
-router.get('/exercise-type/:exercise_type_id', defiExerciceController.getDefisByExerciceTypeId);
+// Routes publiques - Les routes spécifiques AVANT les routes génériques
 router.get('/challenge/:challenge_id/count', defiExerciceController.countExercicesByDefiId);
 router.get('/challenge/:challenge_id/calories', defiExerciceController.calculateTotalCalories);
 router.get('/challenge/:challenge_id/stats', defiExerciceController.getStats);
+router.get('/challenge/:challenge_id', defiExerciceController.getExercicesByDefiId);
+
+router.get('/exercise-type/:exercise_type_id', defiExerciceController.getDefisByExerciceTypeId);
 router.get('/:challenge_id/:exercise_type_id', defiExerciceController.getByDefiAndExerciceIds);
+
+// Route générique en DERNIER
 router.get('/:id', defiExerciceController.getById);
 
 // Routes protégées - Créateur du défi uniquement

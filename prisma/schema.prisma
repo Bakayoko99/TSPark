@@ -73,7 +73,8 @@ model User {
   defi_participations UserDefi[]
   workout_sessions    WorkoutSession[]
   created_badges      Badge[]             @relation("BadgeCreator")
-
+  user_badges         UserBadge[]
+  awarded_badges      UserBadge[]         @relation("BadgeAwarder")
 
 
 
@@ -280,9 +281,54 @@ model Badge {
 
   // Relations
   creator     User        @relation("BadgeCreator", fields: [created_by], references: [id], onDelete: Cascade)
-
+  user_badges UserBadge[]
+  rules       BadgeRule[]
 
   @@index([badge_type])
   @@index([created_by])
   @@map("badges")
+}
+model UserBadge {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  badge_id   Int
+  awarded_at DateTime @default(now())
+  awarded_by Int?     // Admin qui a attribué manuellement (optionnel)
+
+  // Relations
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  badge      Badge    @relation(fields: [badge_id], references: [id], onDelete: Cascade)
+  awarder    User?    @relation("BadgeAwarder", fields: [awarded_by], references: [id], onDelete: SetNull)
+
+  @@unique([user_id, badge_id])
+  @@index([user_id])
+  @@index([badge_id])
+  @@index([awarded_at])
+  @@map("user_badges")
+}
+enum BadgeRuleType {
+  CHALLENGE_COMPLETED
+  CHALLENGES_COUNT
+  CONSECUTIVE_DAYS
+  TOTAL_SESSIONS
+  TOTAL_CALORIES
+  TOTAL_WEIGHT_LIFTED
+  SPECIFIC_EXERCISE
+  PLAYER_SCORE
+}
+model BadgeRule {
+  id                  Int            @id @default(autoincrement())
+  badge_id            Int
+  rule_type           BadgeRuleType
+  rule_config         Json           // Configuration flexible pour chaque type de règle
+  is_active           Boolean        @default(true)
+  created_at          DateTime       @default(now())
+  updated_at          DateTime       @updatedAt
+
+  // Relations
+  badge               Badge          @relation(fields: [badge_id], references: [id], onDelete: Cascade)
+
+  @@index([badge_id])
+  @@index([rule_type])
+  @@map("badge_rules")
 }
